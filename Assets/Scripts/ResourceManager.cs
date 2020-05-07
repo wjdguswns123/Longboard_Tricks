@@ -8,7 +8,7 @@ using UnityEngine.Networking;
 public class ResourceManager : Singleton<ResourceManager>
 {
     //Object Pool.
-    Dictionary<string, Object> m_ObjectPool = new Dictionary<string, Object>();
+    Dictionary<string, Object> objectPool = new Dictionary<string, Object>();
 
     private bool useAssetBundle = false;
     public bool UseAssetBundle
@@ -49,9 +49,9 @@ public class ResourceManager : Singleton<ResourceManager>
             Object[] objs = bundle.LoadAllAssets();
             foreach(Object o in objs)
             {
-                if(!m_ObjectPool.ContainsKey(o.name))
+                if(!objectPool.ContainsKey(o.name))
                 {
-                    m_ObjectPool.Add(o.name, o);
+                    objectPool.Add(o.name, o);
                 }
             }
 
@@ -106,9 +106,9 @@ public class ResourceManager : Singleton<ResourceManager>
         Object obj = null;
         AssetBundle bundle = null;
 
-        if (m_ObjectPool.ContainsKey(path))
+        if (objectPool.ContainsKey(path))
         {
-            obj = m_ObjectPool[path];
+            obj = objectPool[path];
         }
         else
         {
@@ -119,7 +119,7 @@ public class ResourceManager : Singleton<ResourceManager>
                 return null;
             }
             obj = bundle.LoadAsset<Object>(path);
-            m_ObjectPool.Add(path, obj);
+            objectPool.Add(path, obj);
         }
 
         GameObject prefab = Instantiate(obj) as GameObject;
@@ -134,6 +134,6 @@ public class ResourceManager : Singleton<ResourceManager>
 
     private void OnDestroy()
     {
-        m_ObjectPool.Clear();
+        objectPool.Clear();
     }
 }
